@@ -1,6 +1,18 @@
 package ua.opnu;
 
+import java.util.Arrays;
+
 public class Main {
+    private static final int MIN_TEMP = 0;
+    private static final int MAX_TEMP = 100;
+    private static final int LOWER_BOUND = 10;
+    private static final int UPPER_BOUND = 20;
+    private static final int LOWER_TEEN_BOUND = 13;
+    private static final int UPPER_TEEN_BOUND = 19;
+    private static final int TARGET_NUMBER = 9;
+    private static final int PREFIX_LENGTH = 4;
+    private static final int[] ARRAY_PATTERN = {1, 2, 3};
+
     public static void main(String[] args) {
         System.out.println("Hello world!");
     }
@@ -15,8 +27,8 @@ public class Main {
      * icyHot(2, 120) → false
      */
     public boolean icyHot(int temp1, int temp2) {
-        // TODO: write method body
-        return false;
+        return (temp1 < MIN_TEMP && temp2 > MAX_TEMP)
+                || (temp1 > MAX_TEMP && temp2 < MIN_TEMP);
     }
 
     /**
@@ -27,8 +39,8 @@ public class Main {
      * in1020(8, 99) → false
      */
     public boolean in1020(int a, int b) {
-        // TODO: write method body
-        return false;
+        return isInRange(a, LOWER_BOUND, UPPER_BOUND)
+                || isInRange(b, LOWER_BOUND, UPPER_BOUND);
     }
 
     /**
@@ -40,8 +52,9 @@ public class Main {
      * hasTeen(20, 10, 13) → true
      */
     public boolean hasTeen(int a, int b, int c) {
-        // TODO: write method body
-        return false;
+        return isInRange(a, LOWER_TEEN_BOUND, UPPER_TEEN_BOUND)
+                || isInRange(b, LOWER_TEEN_BOUND, UPPER_TEEN_BOUND)
+                || isInRange(c, LOWER_TEEN_BOUND, UPPER_TEEN_BOUND);
     }
 
     // ======== Boolean expressions ========
@@ -55,8 +68,7 @@ public class Main {
      * sleepIn(false, true) → true
      */
     public boolean sleepIn(boolean weekday, boolean vacation) {
-        // TODO: write method body
-        return false;
+        return !weekday || vacation;
     }
 
     /**
@@ -68,8 +80,7 @@ public class Main {
      * monkeyTrouble(true, false) → false
      */
     public boolean monkeyTrouble(boolean aSmile, boolean bSmile) {
-        // TODO: write method body
-        return false;
+        return aSmile == bSmile;
     }
 
     /**
@@ -81,8 +92,8 @@ public class Main {
      * posNeg(-4, -5, true) → true
      */
     public boolean posNeg(int a, int b, boolean negative) {
-        // TODO: write method body
-        return false;
+        return negative ? (a < 0 && b < 0)
+                : (a > 0 && b < 0) || (a < 0 && b > 0);
     }
 
     // ======== Loops and Arrays ========
@@ -95,8 +106,7 @@ public class Main {
      * arrayCount9([1, 9, 9, 3, 9]) → 3
      */
     public int arrayCount9(int[] nums) {
-        // TODO: write method body
-        return 0;
+        return countOccurrences(TARGET_NUMBER, nums);
     }
 
     /**
@@ -108,8 +118,7 @@ public class Main {
      * arrayFront9([1, 2, 3, 4, 5]) → false
      */
     public boolean arrayFront9(int[] nums) {
-        // TODO: write method body
-        return false;
+        return containsNumberInPrefix(TARGET_NUMBER, PREFIX_LENGTH, nums);
     }
 
     /**
@@ -120,7 +129,13 @@ public class Main {
      * array123([1, 1, 2, 1, 2, 3]) → true
      */
     public boolean array123(int[] nums) {
-        // TODO: write method body
+        for (int i = 0; i <= nums.length - ARRAY_PATTERN.length; i++) {
+            int[] sub = Arrays.copyOfRange(nums, i, i + ARRAY_PATTERN.length);
+
+            if (Arrays.equals(sub, ARRAY_PATTERN)) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -134,8 +149,7 @@ public class Main {
      * helloName("X") → "Hello X!"
      */
     public String helloName(String name) {
-        // TODO: write method body
-        return null;
+        return String.format("Hello %s!", name);
     }
 
     /**
@@ -147,8 +161,16 @@ public class Main {
      * lastTwo("ab") → "ba"
      */
     public String lastTwo(String str) {
-        // TODO: write method body
-        return null;
+        if (str.length() < 2) {
+            return str;
+        }
+
+        StringBuilder result = new StringBuilder(str);
+        char last = result.charAt(result.length() - 1);
+        result.setCharAt(result.length() - 1,
+                result.charAt(result.length() - 2));
+        result.setCharAt(result.length() - 2, last);
+        return result.toString();
     }
 
     /**
@@ -159,9 +181,23 @@ public class Main {
      * middleTwo("Practice") → "ct"
      */
     public String middleTwo(String str) {
-        // TODO: write method body
-        return null;
+        int mid = str.length() / 2;
+        return str.substring(mid - 1, mid + 1);
     }
 
+    private boolean isInRange(int number, int lowerBound, int upperBound) {
+        return (number >= lowerBound) && (number <= upperBound);
+    }
 
+    private int countOccurrences(int target, int[] array) {
+        return (int) Arrays.stream(array)
+                .filter(n -> n == target)
+                .count();
+    }
+
+    private boolean containsNumberInPrefix(int target, int prefixLength, int[] array) {
+        return Arrays.stream(array)
+                .limit(prefixLength)
+                .anyMatch(n -> n == target);
+    }
 }
